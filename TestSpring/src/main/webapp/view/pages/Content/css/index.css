@@ -1,0 +1,60 @@
+﻿.myCity {
+    border: 2px solid #1e5067;
+    width: 570px;
+    position: fixed;
+    background: #fff;
+    z-index: 99999999996;
+    padding: 5px 10px 10px 10px;
+}
+
+.mini-navbar .city {
+    display: none;
+}
+
+.myCity ul {
+    padding: 10px;
+}
+
+.myCity ul li {
+    height: 23px;
+    clear: both;
+    list-style: none;
+}
+
+.myCity ul li span {
+    color: #2196F3;
+    margin-right: 10px;
+    cursor: default;
+}
+
+.myCity ul li a {
+    display: -webkit-inline-box;
+    color: #858990;
+    width: 50px;
+}
+
+.myCity ul li a:hover {
+    color: red;
+}
+
+.myCity ul li a i {
+    color: rgba(255, 193, 7, 0.64);
+    padding-right: 3px;
+}
+
+.iconfont {
+    font-weight: 100;
+    font-size: 26px;
+    margin-left: -2px;
+}
+
+.img-circle {
+    width: 64px;
+    height: 64px;
+}
+
+.arrow {
+    float: right;
+    margin-top: 14px;
+    /* font-size: 24px; */
+}

@@ -1,17 +1,14 @@
 package cn.kiiwii.framework.spring.TestSpring.springwithmybatis.dao;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
-
 import cn.kiiwii.framework.spring.TestSpring.springwithmybatis.model.Account;
 import cn.kiiwii.framework.spring.TestSpring.springwithmybatis.model.User;
-import org.springframework.cache.annotation.CacheConfig;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+
+import java.util.List;
 
 public interface ITestDAO{
 

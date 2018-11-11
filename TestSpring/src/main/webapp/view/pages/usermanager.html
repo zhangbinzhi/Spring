@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>买哪个好后台管理系统</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+
+    <script src="../js/sb-admin-2.js"></script>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <script>
+            writeHeader();
+        </script>
+
+        <!-- Page Content -->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">用户管理</h1>
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <div >
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <div class="ibox-tools btn-group" id="myTool" style="margin: -7px -5px 0 0; ">
+                        </div>
+                    </div>
+                    <div class="ibox-content" style=" padding-top: 4px;">
+                        <div class="row row-lg">
+                            <div class="col-sm-12">
+                                <!-- CRUD Template  控件部分 id可自定义-->
+                                <div class="crud-template-wrap">
+                                    <div class="example" id="crud-template"></div>
+                                </div>
+                                <!-- End CRUD Template -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Bootstrap table -->
+    <script src="../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+    <script src="../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <link href="../js/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <!-- jQuery Validation plugin javascript-->
+    <script src="../js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="../js/plugins/validate/messages_zh.min.js"></script>
+
+    <!-- Sweetalert -->
+    <link href="../js/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <script src="../js/plugins/sweetalert/sweetalert.min.js"></script>
+
+    <!-- iCheck-->
+    <link href="../js/plugins/iCheck/custom.css" rel="stylesheet">
+    <script src="../js/plugins/iCheck/icheck.min.js"></script>
+
+    <!-- CRUD Template -->
+    <script src="../js/crudTemplate.js"></script>
+    <link href="../js/crudTemplate.css" rel="stylesheet" />
+    <script src="../js/plugins/jquery.form.js"></script>
+
+    <!-- layerDate plugin javascript -->
+    <script src="../js/plugins/layer/laydate/laydate.js"></script>
+    <script src="../js/plugins/layer/layer.min.js"></script>
+
+<script>
+    function forbidUser(ele){
+        var row = $(ele).parent().parent().parent();
+        var tdArr= row.children("td");
+        var INUSE = tdArr[9].innerHTML;
+        var NICKNAME = tdArr[2].innerHTML;
+        var msg;
+        var flag;
+        if("是"===INUSE){
+            msg = "确定封停账号："+NICKNAME+" 吗？";
+            flag="否";
+        }else{
+            msg = "确定启用账号："+NICKNAME+" 吗？";
+            flag="是";
+        }
+        layer.confirm(msg,function(){
+            layer.closeAll();
+            $.ajax({
+                url: "/admin/forbidUser",
+                type: "POST",
+                data: {
+                    "OPENID":$(ele).val(),
+                    "flag":flag,
+                },
+                //contentType: false,
+                //processData: false,
+                success: function (data) {
+                    layer.alert(data.msg,function(){
+                        layer.closeAll();
+                        if(data.status === "success"){
+                            location.reload();
+                        }
+                    });
+                }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    layer.alert("连接服务器失败");
+                }
+            });
+        });
+    }
+    $(document).ready(function(){
+        $('#crud-template').crudTemplate(
+                {
+                    colModel: [
+                        { name: 'OPENID', text: '用户ID', type: "string", width: 50, required: true,searchable:false,isDatetime:true ,hideColumn:true},
+                        { name: 'NICKNAME', text: '用户昵称', type: "string", width: 50, required: true,searchable:false ,readOnly:true },
+                        { name: 'REGIST_TIME', text: '注册时间', type: "string", width: 50, required: true },
+                        { name: 'ISVIP', text: '是否VIP', type: "string", width: 50, required: true },
+                        { name: 'VIP_TIME', text: 'VIP到期时间', type: "string", width: 50, required: true },
+//                        { name: 'TAGS', text: '自定义标签',searchable:false, type: "string", width: 100},
+                        { name: 'GENDER', text: '性别', type: "string", width: 100,readOnly:true},
+                        { name: 'PROVINCE', text: '省份', type: "string", width: 100,readOnly:true},
+                        { name: 'CITY', text: '城市', type: "string", width: 100,readOnly:true},
+                        { name: 'INUSE', text: '账号是否可用', type: "string", width: 100,readOnly:true},
+                    ],
+                    extendCol: [
+                        {"name": "封停/启用账号", "key": "OPENID",fun:"forbidUser"}
+                    ],
+                    postUrl: "/admin/userManager",//查询数据 Post
+//                    delUrl: "/user/delTableData",//删除 Post
+//                    exportUrl: "/user/exportData",//暂时Get 不提交参数
+                    pColumnsWidth: 150,//条件区域列选择宽度
+                    pageRows: 8,//每页行数
+                    keyValue: "OPENID",//主键名称
+                    keyType: "string",//主键类型 [string/number]
+                    editForm: "fixed-table-form",//新增 修改 表单容器
+                    //myTool: "#myTool",//工具条容器
+                    isQuery: true,
+//                    timeKey:"PUBLISH_TIME",
+                    userOperationInfo: "oderQuery",
+//                    userPermission:userPermission,
+                    layDate: {
+                        format: 'YYYY/MM/DD', //日期控件 格式化
+                        istime: false, //是否开启时间选择
+                        isclear: true, //是否显示清空
+                        istoday: true, //是否显示今天
+                        issure: true, //是否显示确认
+                        festival: true, //是否显示节日
+                        min: '1900-01-01 00:00:00', //最小日期
+                        max: '2099-12-31 23:59:59', //最大日期
+                        start: laydate.now(), //开始日期
+                        fixed: false, //是否固定在可视区域
+                        zIndex: 99999999, //css z-index
+                        //choose: function(dates) { //选择好日期的回调
+                        //}
+                    }
+                });
+    });
+
+</script>
+<style>
+
+</style>
+</body>
+
+</html>

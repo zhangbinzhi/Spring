@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> 每月报表 </title>
+    <link rel="shortcut icon" href="./Content/WebStart/Hplus/favicon.ico">
+    <link href="./Content/WebStart/Hplus/css/style.css?v=4.0.0" rel="stylesheet">
+    <link href="./Content/WebStart/Hplus/css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="./Content/WebStart/Hplus/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="./Content/WebStart/Hplus/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="./Content/WebStart/Hplus/css/animate.css" rel="stylesheet">
+    <script src="./mapjs/Config.js"></script>
+    <style>
+        .search-tip {
+            background-color: #e5e6e7;
+            height: 18px;
+            line-height: 20px;
+            padding: 0 5px 0 5px;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            display: inline-block;
+        }
+        .search-item {
+            display: inline-block;
+            padding: 0;
+            margin-top: 10px;
+            padding-right: 5px;
+        }
+        .m-t-f1 {
+            margin-top: -1px;
+        }
+        .fixed-table-footer, .fixed-table-header {
+            height: auto !important;
+            overflow: hidden;
+        }
+        .search-tip {
+            position: absolute;
+            margin-top: -18px;
+        }
+        li[data-type='json'], li[data-type='xml'], li[data-type='txt'], li[data-type='sql'] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <!-- Panel Other -->
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5 style="margin-right: 20px">每月报表统计</h5>
+                <div class="ibox-tools" id="MyTool" style="margin: -7px -5px 0 0; ">
+					<span style="color:#ff0000;"><a id="dlink" style="display:none;" ></a></span>
+                    <button onclick="BuildTable()" class="btn btn-primary btn-w-m  btn-sm" >查询</button>
+                    <button onclick="$('#month_report_table').tableExport({ type: 'excel', escape: 'false',fileName:'每年报表统计' });" class="btn btn-primary btn-w-m m-r btn-sm"  style="width:100px;margin-left: 20px;">导出</button>
+                </div>
+            </div>
+            <div class="ibox-content" style=" padding-top: 4px;">
+                <div class="row row-lg">
+                    <div style="display: inline-block;" class="col-sm-12">
+                       
+                        <span class="col-sm-8" style="padding: 0">
+                 
+                        </span>
+                     
+                    </div>
+                    <div class="col-sm-12" style="margin-top: 20px; ">
+                        <div id="toolbar" style="width: 600px; margin-top: -5px;" >
+                           
+                            <span class="search-item col-sm-3">
+                                <span class="search-tip">报表对象</span>
+                                <select class="form-control m-t-f1 " id="data_type">
+                                    <option value="1" selected="selected">按车辆</option>
+                                    <option value="2">按机构</option>
+                                    <option value="3">按车辆用途</option>
+                                </select>
+                            </span>
+                            <span class="search-item col-sm-8">
+                                <span class="search-tip">请选择月份范围</span>
+                                <span class="input-daterange input-group m-t-f1 " id="DAY_BQ">
+                                    <input type="text" class="form-control" id="DAY_BQ_START" placeholder="开始时间">
+                                    <span class="input-group-addon">到</span>
+                                    <input type="text" class="form-control" id="DAY_BQ_END" placeholder="结束时间">
+                                </span>
+                            </span>
+
+                        </div>
+                        <table id="month_report_table" data-search="true" data-show-columns="true"
+                               data-toolbar="#toolbar"
+                               data-search="true"
+                               data-show-columns="true"></table>
+                    </div>
+
+                    <!--图表-->
+                    <div class="echarts" id="echarts-mrEffective" style="height:200px"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="./Content/WebStart/Hplus/js/jquery.min.js?v=2.1.4"></script>
+    <script src="./Content/WebStart/Hplus/js/bootstrap.min.js?v=3.3.5"></script>
+
+    <!-- Bootstrap table -->
+    <script src="./Content/bootstrap-table-develop/dist/tableExport.js"></script>
+    <script src="./Content/WebStart/Hplus/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script type="text/javascript" charset="utf-8" type="text/javascript" charset="utf-8" src="./Content/WebStart/Hplus/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="./Content/bootstrap-table-develop/dist/extensions/export/bootstrap-table-export.js"></script>
+    <script src="./Content/bootstrap-table-develop/dist/bootstrap-table-fixed-columns.js"></script>
+    <link href="./Content/bootstrap-table-develop/dist/bootstrap-table-fixed-columns.css" rel="stylesheet" />
+    <!-- Sweetalert -->
+    <link href="./Content/WebStart/JQueryTools/sweetalert-master/dist/sweetalert.css" rel="stylesheet" />
+    <script src="./Content/WebStart/JQueryTools/sweetalert-master/dist/sweetalert.min.js"></script>
+    <!-- iCheck-->
+    <link href="./Content/WebStart/Hplus/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <script src="./Content/WebStart/Hplus/js/plugins/iCheck/icheck.min.js"></script>
+    <!-- layerDate plugin javascript -->
+    <script src="./Content/WebStart/Hplus/js/plugins/layer/laydate/laydate.js"></script>
+    <!-- ECharts -->
+    <script src="./Content/WebStart/Hplus/js/plugins/echarts/echarts-all.js"></script>
+
+    <!--<script type="text/javascript" charset="utf-8" src="common.js"></script>-->
+    <script type="text/javascript" charset="utf-8" src="../js/utils.js"></script>
+
+    <!--初始值-->
+    <script>
+        $(document).ready(function () {
+            var myDate = new Date();
+            document.getElementById("DAY_BQ_END").value=myDate.getFullYear() + '-' + (myDate.getMonth()+1);
+            myDate.setDate(myDate.getDate() - 30);
+            document.getElementById("DAY_BQ_START").value=myDate.getFullYear() + '-' + (myDate.getMonth()+1) ;
+
+        });
+    </script>
+    <!--天粒度-->
+    <script>
+        var BENGIN;
+        var DIFF;
+        var DAY_BQ_START = {
+            elem: "#DAY_BQ_START",
+            format: "YYYY-MM",
+            min: "2018-01-01",
+            max: "2099-06-16",
+            istime: false,
+            istoday: true,
+            choose: function (datas) {
+                DAY_BQ_END.min = datas; //开始日选好后，重置结束日的最小日期
+                DAY_BQ_END.start = datas; //将结束日的初始值设定为开始日
+            }
+        };
+        var DAY_BQ_END = {
+            elem: "#DAY_BQ_END",
+            format: "YYYY-MM",
+            min: "2018-01-01",
+            max: "2099-06-16",
+            istime: false,
+            istoday: true,
+            choose: function (datas) {
+                DAY_BQ_START.max = datas; //结束日选好后，重置开始日的最大日期
+            }
+        };
+        laydate(DAY_BQ_START);
+        laydate(DAY_BQ_END);
+
+    </script>
+    <script>
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        //计算两个日期天数差的函数，通用
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        function DateDiff(sDate1, sDate2) { //sDate1和sDate2是yyyy-MM-dd格式
+
+            var aDate, oDate1, oDate2, iDays;
+            aDate = sDate1.split("-");
+            oDate1 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0]); //转换为yyyy-MM-dd格式
+            aDate = sDate2.split("-");
+            oDate2 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0]);
+            iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24); //把相差的毫秒数转换为天数
+
+            return iDays; //返回相差天数
+        }
+
+        // 对Date的扩展，将 Date 转化为指定格式的String   
+        // 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，   
+        // 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)   
+        // 例子：   
+        // (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423   
+        // (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18   
+        Date.prototype.Format = function(fmt) { //author: meizz   
+            var o = {
+                "M+": this.getMonth() + 1, //月份   
+                "d+": this.getDate(), //日   
+                "h+": this.getHours(), //小时   
+                "m+": this.getMinutes(), //分   
+                "s+": this.getSeconds(), //秒   
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度   
+                "S": this.getMilliseconds() //毫秒   
+            };
+            if (/(y+)/.test(fmt))
+                fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt))
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        };
+
+        $('#data_sum').change(function () {
+            var p = $(this).children('option:selected').val(); //这就是selected的值  
+            if (p === "1") {
+                 style = style1;
+            } else {
+
+                 style = style2;
+            }
+        });
+    </script>
+    <!--表头-->
+<script>
+
+</script>
+    <!--日期选择-->
+    <script>
+        var message = undefined;
+        var BuildTable = function () {
+            var bqs = new Date($("#DAY_BQ_START").val());
+            var bqe = new Date($("#DAY_BQ_END").val());
+            if (bqs.toString() == 'Invalid Date' || bqe.toString() == 'Invalid Date'){
+                message = "请选择日期";
+                sweetAlert("出现错误", message, "error");
+                return false;
+            }
+
+            if ($("#data_type").children('option:selected').val() == 1) {
+                BuildCarReport();
+            } else  if ($("#data_type").children('option:selected').val() == 2){
+                BuildOrgReport();
+            }
+            else{
+                BuildPurposeReport();
+            }
+        };
+        //导出对象
+        var ExportJson = {
+            fileName: "Table_REPORT" + new Date().Format("yyyyMMdd") + ".xls",
+            title: "Table_REPORT",
+            jsonData: {
+                title: [],
+                dataRow:[]
+            }
+        }
+        ///导出的
+        var ExportTable = function() {
+            jQuery.ajax({
+                url: Public.exportJsonData,
+                type: "post",
+                dataType: 'json', //here
+                data: { jData : JSON.stringify(ExportJson)},
+                success: function(data) {
+                    if (data.status === "fail") {
+                        alert("导出失败");
+                    } else {
+                        //window.open(Public.getDownFile + '?file=' + data.File);
+                        document.getElementById("dlink").href = data.File;
+                        document.getElementById("dlink").click();
+                    }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("导出失败" + textStatus);
+                }
+            });
+        }
+        var PostData = function (json) {
+            $(".fixed-table-loading").html("正在努力地加载数据中，请稍候……");
+            $("#month_report_table").bootstrapTable('showLoading');
+            var date1 = new Date(); //开始时间
+            ExportJson.jsonData.dataRow = [];
+            jQuery.ajax({
+                url: httpServer+"/report/monthReport",
+                type: "post",
+                dataType: 'json',//here
+                data: json,
+               
+                success: function (data) {
+                    if (data.status === "fail") {
+                        $(".fixed-table-loading").html("加载数据出现异常:" + data.msg);
+                        $("span.pagination-info").html("未查询到数据");
+                    } else {
+                        BuildChart(data.items);
+
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $(".fixed-table-loading").html("加载数据出现异常:" + textStatus);
+                }
+            });
+        };
+        function getHeight() {
+            return $(window).height() - 140;
+        }
+        var BuildCarReport = function () {
+            $('#month_report_table').bootstrapTable('destroy');
+            $("#month_report_table").bootstrapTable({
+                dataType: "json",
+                method: 'post',
+                cache: false,
+
+                height: getHeight(),//表格高度
+//                showExport: true,                     //是否显示导出
+//                exportDataType: "all",              //basic', 'all', 'selected'.
+                fixedColumns: true,
+                fixedNumber: 1,
+
+                columns: [
+                    { field: '日期', title: '月份', valign: "middle", align: "center", class: "td_blue" },
+                    { field: '车牌号', title: '车牌号', valign: "middle", align: "center", class: "td_blue"},
+                    { field: '车辆类型', title: '车辆类型', valign: "middle", align: "center", class: "td_blue" },
+                    { field: '车辆用途', title: '车辆用途', valign: "middle", align: "center", class: "td_blue" },
+                    { field: '所属机构', title: '所属机构', valign: "middle", align: "center", class: "td_blue" },
+
+                    { field: '平均车速', title: '平均车速(公里/小时)', valign: "middle", align: "center", class: "td_blue", formatter: function (value, row, index) { return isNaN(value) ? value : parseFloat(value).toFixed(2); } },
+                    { field: '超速次数', title: '超速次数(次) ', valign: "middle", align: "center", class: "td_blue" },
+                    { field: '越栏次数', title: '越栏次数(次)', valign: "middle", align: "center", class: "td_blue" },
+                    { field: '越线次数', title: '越线次数(次)', valign: "middle", align: "center", class: "td_blue" },
+//                    { field: '久停次数', title: '久停次数', valign: "middle", align: "center", class: "td_blue", formatter: function (value, row, index) { return isNaN(value) ? value : parseFloat(value).toFixed(4); } },
+                ],
+            });
+            PostData(CarSql());
+        };
+        var CarSql = function() {
+            var bqs = new Date($("#DAY_BQ_START").val());
+            var bqe = new Date($("#DAY_BQ_END").val());
+//            var sql = "select "+
+//                "DATE_FORMAT(REP_DATE,'%Y-%m') 日期,"+
+//                "VEHICLE_NUMBER as 车牌号,"+
+//                "VEHICLE_TYPE as 车辆类型,"+
+//                "VEHICLE_PURPOSE as 车辆用途 ,"+
+//                "concat_ws('-',HEADCOMPANY , SUBCOMPANY  , DEPARTMENT , TEAMS) as 所属机构 ,"+
+//                "avg(AVG_SPEED) as 平均车速 ,"+
+//                "sum(SUM_OVERSPEED) as 超速次数 ,"+
+//                "sum(SUM_ELECTRONICFENCE) as 越栏次数 ,"+
+//                "sum(SUM_OVERLINE) as 越线次数 "+
+////                "SUM_LONGSTOP as 久停次数 " +
+//                "from t_day_report "+
+//                "WHERE  REP_DATE>=STR_TO_DATE('" + bqs.Format("yyyyMMdd") + "','%Y%m%d')" + " and REP_DATE<=STR_TO_DATE('" + bqe.Format("yyyyMMdd") + "','%Y%m%d')" +
+//                " group by DATE_FORMAT(REP_DATE,'%Y-%m'),VEHICLE_NUMBER,VEHICLE_TYPE,VEHICLE_PURPOSE,HEADCOMPANY,SUBCOMPANY,DEPARTMENT,TEAMS ";
+//            return sql;
+            return {
+                TYPE:"CAR",
+                DAY_BQ_START:bqs.Format("yyyyMMdd"),
+                DAY_BQ_END:bqe.Format("yyyyMMdd")
+            }
+        };
+        
+         var BuildOrgReport = function() {
+            $('#month_report_table').bootstrapTable('destroy');
+            $("#month_report_table").bootstrapTable({
+                dataType: "json",
+                method: 'post',
+                cache: false,
+                columns:  [
+                    { field: '日期', title: '月份', valign: "middle", align: "center", class: "td_blue" },
+                    { field: '所属机构', title: '所属机构', valign: "middle", align: "center", class: "td_blue" },
+
+                    { field: '平均车速', title: '平均车速(公里/小时)', valign: "middle", align: "center", class: "td_blue", formatter: function (value, row, index) { return isNaN(value) ? value : parseFloat(value).toFixed(2); } },
+                    { field: '超速次数', title: '超速次数(次) ', valign: "middle", align: "center", class: "td_blue" },
+                    { field: '越栏次数', title: '越栏次数(次)', valign: "middle", align: "center", class: "td_blue" },
+                    { field: '越线次数', title: '越线次数(次)', valign: "middle", align: "center", class: "td_blue" },
+//                    { field: '久停次数', title: '久停次数', valign: "middle", align: "center", class: "td_blue", formatter: function (value, row, index) { return isNaN(value) ? value : parseFloat(value).toFixed(4); } },
+                ],
+                height: getHeight(),//表格高度
+                fixedColumns: true,
+                fixedNumber: 1,
+            });
+            PostData(OrgSql());
+        };
+        var OrgSql = function() {
+            var bqs = new Date($("#DAY_BQ_START").val());
+            var bqe = new Date($("#DAY_BQ_END").val());
+//            var sql = "select "+
+//                    "DATE_FORMAT(REP_DATE,'%Y-%m') as 日期 ,"+
+//                    "concat_ws('-',HEADCOMPANY , SUBCOMPANY  , DEPARTMENT , TEAMS) as 所属机构 ,"+
+//                    "avg(AVG_SPEED) as 平均车速 ,"+
+//                    "sum(SUM_OVERSPEED) as 超速次数 ,"+
+//                    "sum(SUM_ELECTRONICFENCE) as 越栏次数 ,"+
+//                    "sum(SUM_OVERLINE) as 越线次数 "+
+////                "SUM_LONGSTOP as 久停次数 " +
+//                    "from t_day_report " +
+//                    "WHERE  REP_DATE>=STR_TO_DATE('" + bqs.Format("yyyyMMdd") + "','%Y%m%d')" + " and REP_DATE<=STR_TO_DATE('" + bqe.Format("yyyyMMdd") + "','%Y%m%d')" +
+//                    "group by DATE_FORMAT(REP_DATE,'%Y-%m'),HEADCOMPANY ,SUBCOMPANY, DEPARTMENT, TEAMS ";
+//            return sql;
+            return {
+                TYPE:"COMPANY",
+                DAY_BQ_START:bqs.Format("yyyyMMdd"),
+                DAY_BQ_END:bqe.Format("yyyyMMdd")
+            }
+        };
+
+        var BuildPurposeReport = function() {
+            $('#month_report_table').bootstrapTable('destroy');
+            $("#month_report_table").bootstrapTable({
+                dataType: "json",
+                method: 'post',
+                cache: false,
+                columns:  [
+                    { field: '日期', title: '月份', valign: "middle", align: "center", class: "td_blue" },
+                    { field: '车辆用途', title: '车辆用途', valign: "middle", align: "center", class: "td_blue" },
+
+                    { field: '平均车速', title: '平均车速(公里/小时)', valign: "middle", align: "center", class: "td_blue", formatter: function (value, row, index) { return isNaN(value) ? value : parseFloat(value).toFixed(2); } },
+                    { field: '超速次数', title: '超速次数(次) ', valign: "middle", align: "center", class: "td_blue" },
+                    { field: '越栏次数', title: '越栏次数(次)', valign: "middle", align: "center", class: "td_blue" },
+                    { field: '越线次数', title: '越线次数(次)', valign: "middle", align: "center", class: "td_blue" },
+//                    { field: '久停次数', title: '久停次数', valign: "middle", align: "center", class: "td_blue", formatter: function (value, row, index) { return isNaN(value) ? value : parseFloat(value).toFixed(4); } },
+                ],
+                height: getHeight(),//表格高度
+                fixedColumns: true,
+                fixedNumber: 1,
+            });
+            PostData(PurposeSql());
+        };
+        var PurposeSql = function() {
+            var bqs = new Date($("#DAY_BQ_START").val());
+            var bqe = new Date($("#DAY_BQ_END").val());
+//            var sql = "select "+
+//                    "DATE_FORMAT(REP_DATE,'%Y-%m') as 日期 ,"+
+//                    "VEHICLE_PURPOSE as 车辆用途 ,"+
+//                    "avg(AVG_SPEED) as 平均车速 ,"+
+//                    "sum(SUM_OVERSPEED) as 超速次数 ,"+
+//                    "sum(SUM_ELECTRONICFENCE) as 越栏次数 ,"+
+//                    "sum(SUM_OVERLINE) as 越线次数 "+
+////                "SUM_LONGSTOP as 久停次数 " +
+//                    "from t_day_report " +
+//                    "WHERE  REP_DATE>=STR_TO_DATE('" + bqs.Format("yyyyMMdd") + "','%Y%m%d')" + " and REP_DATE<=STR_TO_DATE('" + bqe.Format("yyyyMMdd") + "','%Y%m%d')" +
+//                    "group by DATE_FORMAT(REP_DATE,'%Y-%m'),VEHICLE_PURPOSE";
+//            return sql;
+            return {
+                TYPE:"PURPOSE",
+                DAY_BQ_START:bqs.Format("yyyyMMdd"),
+                DAY_BQ_END:bqe.Format("yyyyMMdd")
+            }
+        };
+
+        var BuildChart = function(items) {
+
+            var all_1 = 0;
+            var all_2 = 0;
+            var all_3 = 0;
+            var all_4 = 0;
+            var all_5 = 0;
+
+            jQuery.each(items, function (index, r) {
+
+                r.平均车速 = parseFloat(r.平均车速);
+                r.超速次数 = parseFloat(r.超速次数);
+                r.越栏次数 = parseFloat(r.越栏次数);
+                r.越线次数 = parseFloat(r.越线次数);
+
+								
+                all_1 += r.平均车速;
+                all_2 += r.超速次数;
+                all_3 += r.越栏次数;
+                all_4 += r.越线次数;
+
+
+            });
+
+            var a = {
+                "平均车速": "<span style=\"color:red\">" + (all_1/items.length).toFixed(2) + "</span>",
+                "超速次数": "<span style=\"color:red\">" + all_2.toFixed(0) + "</span>",
+                "越栏次数": "<span style=\"color:red\">" + all_3.toFixed(0) + "</span>",
+                "越线次数": "<span style=\"color:red\">" + all_4.toFixed(0) + "</span>",
+                "日期": "<span style=\"color:red\">累计值</span>",
+            };
+
+            items.push(a);
+
+            $("#month_report_table").bootstrapTable('load', items);
+            $("#month_report_table").bootstrapTable('hideLoading');
+        };
+    </script>
+</body>
+</html>

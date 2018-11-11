@@ -95,8 +95,7 @@
     <!-- 事务配置 start -->
     <bean id="transactionManager"
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource">
-        </property>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
     <tx:advice id="txadvice" transaction-manager="transactionManager">

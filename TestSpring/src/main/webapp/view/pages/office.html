@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>机构管理</title>
+    <link rel="shortcut icon" href="./images/logo.ico">
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+
+    <script src="../js/sb-admin-2.js"></script>
+    <link href="../js/plugins/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+    <script type="text/javascript" src="../js/plugins/zTree_v3/js/jquery.ztree.core.min.js"></script>
+    <script type="text/javascript" src="../js/plugins/zTree_v3/js/jquery.ztree.exedit.min.js"></script>
+    <script type="text/javascript" src="../js/plugins/zTree_v3/js/jquery.ztree.exhide.min.js"></script>
+    <script type="text/javascript" src="../js/plugins/layer/layer.min.js"></script>
+    <script type="text/javascript" src="../js/officMenu.js"></script>
+    <script type="text/javascript" src="./mapJs/config.js"></script>
+
+    <style type="text/css">
+        .ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
+    </style>
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+        <!-- Navigation -->
+        <!-- Navigation -->
+        <script>
+            writeHeader();
+        </script>
+
+        <!-- Page Content -->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">机构管理</h1>
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+            </div>
+
+            <div>
+                <button type="button" class="btn btn-default" onclick="saveZtree()">保存</button>
+                <button type="button" class="btn btn-default" onclick="resetZtree()">还原</button>
+                <button type="button" class="btn btn-default" onclick="openALL()">展开全部</button>
+                <button type="button" class="btn btn-default" onclick="closeAll()">收缩全部</button>
+            </div>
+
+            <div class="content_wrap">
+                <div class="zTreeDemoBackground left ">
+                    <ul id="treeDemo"   class="ztree"></ul>
+                </div>
+            </div>
+            <br/>
+
+
+            <!-- /.container-fluid -->
+        </div>
+
+        <!-- /#page-wrapper -->
+
+    </div>
+    <div id="form" style="width: 400px;height: 300px;padding: 20px"  hidden="hidden">
+        <form >
+            <div class="">
+                <label>名称</label>
+                <input id="menuMame" class="form-control" placeholder="请输入名称">
+            </div>
+            <button type="button" class="btn btn-default" onclick="addNode()">确定</button>
+            <button type="button" class="btn btn-default" onclick="cancel()">取消</button>
+        </form>
+    </div>
+
+    <!-- /#wrapper -->
+
+
+</body>
+
+</html>

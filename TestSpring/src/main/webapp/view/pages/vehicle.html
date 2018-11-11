@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>车辆管理</title>
+    <link rel="shortcut icon" href="./images/logo.ico">
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+
+    <script src="../js/sb-admin-2.js"></script>
+
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <script>
+            writeHeader();
+        </script>
+
+        <!-- Page Content -->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">车辆管理</h1>
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <div >
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <!--<h5 style="margin-right: 20px">订单查看 <small>所有订单</small></h5>-->
+                        <div class="ibox-tools btn-group" id="myTool" style="margin: -7px -5px 0 0; ">
+                        </div>
+                    </div>
+                    <div class="ibox-content" style=" padding-top: 4px;">
+                        <div class="row row-lg">
+                            <div class="col-sm-12">
+                                <!-- CRUD Template  控件部分 id可自定义-->
+                                <div class="crud-template-wrap">
+                                    <div class="example" id="crud-template"></div>
+                                </div>
+                                <!-- End CRUD Template -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /#page-wrapper -->
+        <div id="companyForm" style="height: 240px;width: 420px;padding: 10px" hidden="hidden">
+            <form role="form">
+                <div hidden="hidden">
+                    <input id="select_name"/>
+                </div>
+                <div class="form-group">
+                    <label id="companyType">Selects</label>
+                    <select id="sel_company" class="form-control">
+                    </select>
+                </div>
+                <button type="button" class="btn btn-default" onclick="saveSelect()">确定</button>
+                <button type="button" class="btn btn-default" onclick="cancel()">取消</button>
+            </form>
+        </div>
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Bootstrap table -->
+    <script src="../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+    <script src="../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <link href="../js/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <!-- jQuery Validation plugin javascript-->
+    <script src="../js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="../js/plugins/validate/messages_zh.min.js"></script>
+
+    <!-- Sweetalert -->
+    <link href="../js/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <script src="../js/plugins/sweetalert/sweetalert.min.js"></script>
+
+    <!-- iCheck-->
+    <link href="../js/plugins/iCheck/custom.css" rel="stylesheet">
+    <script src="../js/plugins/iCheck/icheck.min.js"></script>
+
+    <!-- CRUD Template -->
+    <script src="../js/crudTemplate.js"></script>
+    <link href="../js/crudTemplate.css" rel="stylesheet" />
+    <script src="../js/plugins/jquery.form.js"></script>
+    <script src="./mapJs/config.js"></script>
+    <!-- layerDate plugin javascript -->
+    <script src="../js/plugins/layer/laydate/laydate.js"></script>
+    <script src="../js/plugins/layer/layer.min.js"></script>
+    <script src="../js/departUtils.js"></script>
+<script>
+
+
+
+    function buildTable(){
+        $('#crud-template').crudTemplate(
+                {
+                    colModel: [
+                        { name: 'vehicle_number', text: '车牌号', type: "string", width: 100, keyValue: true ,readOnly:false,hideColumn:false},
+                        { name: 'vehicle_type', text: '车辆类型', type: "string", width: 50, required: true,searchable:false,isDatetime:false },
+                        { name: 'vehicle_purpose', text: '车辆用途', type: "string", width: 50, required: true,searchable:false ,
+                            valueType:"select",selectOption :"装车用,转栈用,清仓用" },
+                        { name: 'inuse', text: '启用', type: "string", width: 50, required: true, valueType:"select",selectOption :"是,否" },
+                        { name: 'owner', text: '司机姓名', type: "string", width: 50, required: true },
+                        { name: 'phone_number', text: '司机手机号', type: "string", width: 100},
+//                        { name: 'engine_number', text: '发动机号', type: "string", width: 100},
+//                        { name: 'register_time', text: '注册时间', type: "string", width: 100,isDatetime:true},
+                        { name: 'create_time', text: '创建时间', type: "string", width: 100,readOnly:true},
+//                        { name: 'update_time', text: '最近更新', type: "string", width: 100,readOnly:true},
+                        { name: 'terminal_Sn', text: '终端编号', type: "string", width: 100},
+                        { name: 'terminal_Model', text: '终端模式', type: "string", width: 100},
+                        { name: 'headcompany', text: '所属公司', type: "string", width: 100,bindEvent:"onClick",bindFunction:"selectHeadCompany"},
+                        { name: 'subcompany', text: '所属子公司', type: "string", width: 100,bindEvent:"onClick",bindFunction:"selectSubCompany"},
+//                        { name: 'department', text: '所属部门', type: "string", width: 100, valueType:"select",selectOption :"" ,bindEvent:"onClick",bindFunction:"selectDepartment"},
+//                        { name: 'teams', text: '所属队伍', type: "string", width: 100, valueType:"select",selectOption :"" }
+                    ],
+                    postUrl: httpServer+"/vehicle/query",//查询数据 Post
+                    delUrl: httpServer+"/vehicle/delete",//删除 Post
+                    addUrl: httpServer+"/vehicle/insert",//Post 新增数据
+                    editUrl: httpServer+"/vehicle/update",//Post 修改数据
+                    pColumnsWidth: 150,//条件区域列选择宽度
+                    pageRows: 8,//每页行数
+                    keyValue: "vehicle_number",//主键名称
+                    keyType: "string",//主键类型 [string/number]
+                    editForm: "fixed-table-form",//新增 修改 表单容器
+                    //myTool: "#myTool",//工具条容器
+                    isQuery: false,
+                    timeKey:"",
+//                    userOperationInfo: "oderQuery",
+                    userPermission:{create:true,remove:true,update:true,edit:true},
+                    layDate: {
+                        format: 'YYYY/MM/DD', //日期控件 格式化
+                        istime: false, //是否开启时间选择
+                        isclear: true, //是否显示清空
+                        istoday: true, //是否显示今天
+                        issure: true, //是否显示确认
+                        festival: true, //是否显示节日
+                        min: '1900-01-01 00:00:00', //最小日期
+                        max: '2099-12-31 23:59:59', //最大日期
+                        start: laydate.now(), //开始日期
+                        fixed: false, //是否固定在可视区域
+                        zIndex: 99999999, //css z-index
+                        //choose: function(dates) { //选择好日期的回调
+                        //}
+                    }
+                });
+    }
+    $(document).ready(function(){
+        loadDepartment(function(){
+            buildTable()
+        });
+    });
+
+
+</script>
+<style>
+
+</style>
+</body>
+
+</html>

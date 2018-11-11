@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+	<title>地图配置</title>
+	<style>
+		body,html{height: 100%;}
+		body,ul{margin:0;padding:0}
+		body{font:14px "微软雅黑","宋体","Arial Narrow",HELVETICA;-webkit-text-size-adjust:100%;}
+		li{list-style:none}
+		a{text-decoration:none;}
+
+		#c_main{
+			background-color: #fff;
+			width: 100%;
+			height: 100%;
+		}
+
+		#nav {
+			width: 100%;
+			height: 38%;
+			overflow: hidden;
+			position: relative;
+		}
+		#content {
+			background-color: #cc85d9;
+			width: 100%;
+			position: absolute;
+			display: flex;
+			top: 38%;
+			bottom: 0px;
+			left: 0px;
+			overflow: hidden;
+		}
+		.con_right{
+			flex: 1;
+			height: 100%;
+			color: #ffffff;
+			background:#000000;
+			overflow: hidden;
+		}
+	</style>
+	
+	 <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+    <!--<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">-->
+    <!-- Custom Theme JavaScript -->
+    <script src="../js/sb-admin-2.js"></script>
+    <script type="text/javascript" src="../js/plugins/openLayer5.2.0/ol.js"></script>
+    <script type="text/javascript" src="../js/plugins/openLayer5.2.0/measuretool.js"></script>
+    <link rel="stylesheet" href="../js/plugins/openLayer5.2.0/ol.css">
+    <link rel="stylesheet" href="css/zTree.css">
+    <link rel="stylesheet" href="../js/plugins/openLayer5.2.0/measuretool.css">
+    <link rel="stylesheet" href="../js/plugins/openLayer5.2.0/selectedCellStyle.css">
+
+    <script src="./mapJs/map5.2.0.js"></script>
+    <script src="./mapJs/mapInteraction.js"></script>
+    <script src="./mapJs/mapCommon.js"></script>
+    <script src="./mapJs/setting.js"></script>
+    <script src="./mapJs/roadLimit.js"></script>
+    <script src="./mapJs/planRoute.js"></script>
+    <script src="./mapJs/fence.js"></script>
+    <script src="./mapJs/config.js"></script>
+
+    <script src="../js/plugins/layer/layer.min.js"></script>
+    <script type="text/javascript" src="../js/plugins/zTree_v3/js/jquery.ztree.all.js"></script>
+
+    <style>
+       
+        .map-right-con {
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            overflow: auto;
+            background: #fff;
+            border: #ddd 1px solid;
+            padding: 10px;
+			height: 100%;
+        }
+    </style>
+	    <link rel="stylesheet" type="text/css" href="css/common.css">
+		<link rel="stylesheet" type="text/css" href="./../js/plugins/layui/css/layui.css">
+    
+</head>
+
+<body>
+	<div id="c_main">
+		<div id="nav" style="border: 1px solid;border-color:#23527c;">
+			<div class="map-right-con">
+                        <div>
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist" id="myTabs">
+                                <li role="presentation" class="active"><a href="#home" aria-controls="home"
+                                                                          aria-expanded="true" role="tab"
+                                                                          data-toggle="tab">限速设置</a></li>
+                                <li role="presentation"><a href="#profile" aria-controls="profile" aria-expanded="false"
+                                                           role="tab"
+                                                           data-toggle="tab">越线设置</a></li>
+                                <li role="presentation"><a href="#messages" aria-controls="messages"
+                                                           aria-expanded="false" role="tab"
+                                                           data-toggle="tab">电子围栏设置</a></li>
+                                <!--<li role="presentation"><a href="#settings" aria-controls="settings" role="tab"-->
+                                <!--data-toggle="tab">测试</a></li>-->
+                            </ul>
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="home">
+                                    <div id="div_roadLimitTable" >
+
+                                        <span class=" col-sm-4">
+                                            <button type="button" id="btn_addRoadLimit" class="btn btn-primary" style=" margin-top:10px;width:100px;" onclick="addRouteLimit()">新增</button>
+                                        </span>
+
+                                        <table id="roadLimitTable" class="table table-hover" data-search="true"  data-show-columns="true" style="height:38%;overflow:auto;">
+                                            <thead>
+                                            <th>序号</th>
+                                            <th>路线名称</th>
+                                            <th>限速（公里/小时）</th>
+                                            <th>是否启用</th>
+                                            <th>操作</th>
+                                            </thead>
+                                            <tbody id="table_roadLimit"></tbody>
+                                        </table>
+                                    </div>
+									<div id="div_addRoadLimitForm" hidden="hidden">
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="roadLimitNameInput">路线名称</label>
+                                                <input type="text" class="form-control" id="roadLimitNameInput"
+                                                       placeholder="请输入路线名称">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="limitSpeed">限速设置</label>
+                                                <input type="text" class="form-control" id="limitSpeed"
+                                                       placeholder="请输入速度（如 ： 30）">
+                                            </div>
+
+                                            <div class="form-group" hidden="hidden">
+                                                <label for="roadLimitGeojson"></label>
+                                                <input type="text" class="form-control" id="roadLimitGeojson"
+                                                       placeholder="">
+                                                <input type="text" class="form-control" id="roadLimitHistoryName"
+                                                       placeholder="">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="roadLimitStatus">是否启用</label>
+                                                <select id="roadLimitStatus" class="form-control">
+                                                    <option value="1" selected="selected">是</option>
+                                                    <option value="0">否</option>
+                                                </select>
+                                            </div>
+                                            <!--<div align="right">-->
+                                            <button type="button" id="btn_startDrawRoadLimit" class="btn btn-default"
+                                                    onclick="startDrawRoadLimit($(this))">开始绘制
+                                            </button>
+                                            <button type="button" class="btn btn-default" onclick="saveRoadLimit()">保存
+                                            </button>
+                                            <button type="button" class="btn btn-default" onclick="cancelRoadLimit()">
+                                                取消
+                                            </button>
+                                            <!--</div>-->
+                                        </form>
+                                    </div>
+                                 </div>
+								 <div role="tabpanel" class="tab-pane" id="profile">
+                                    <div id="div_planRouteTable">
+
+                                        <span class=" col-sm-4">
+                                            <button type="button" id="btn_addPlanRoute" class="btn btn-primary" style="margin-top:10px;width:100px;" onclick="addPlanRoute($(this))">新增</button>
+                                        </span>
+
+                                        <table id="planRouteTable" data-search="true"  data-show-columns="true"  class="table table-hover">
+                                            <thead>
+                                            <th>序号</th>
+                                            <th>规划路线名称</th>
+                                            <th>操作</th>
+                                            </thead>
+                                            <tbody id="table_planRoute"></tbody>
+                                        </table>
+                                    </div>
+                                    <div id="div_addPlanRouteForm" hidden="hidden">
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="planRouteInput">规划路线名称</label>
+                                                <input type="text" class="form-control" id="planRouteInput"
+                                                       placeholder="请输入规划路线名称">
+                                            </div>
+
+                                            <div class="form-group" hidden="hidden">
+                                                <label for="planRouteGeojson"></label>
+                                                <input type="text" class="form-control" id="planRouteGeojson"
+                                                       placeholder="">
+                                                <input type="text" class="form-control" id="planRouteHistoryName"
+                                                       placeholder="">
+                                            </div>
+
+                                            <!--<div align="right">-->
+                                            <button type="button" id="btn_startDrawPlanRoute" class="btn btn-default"
+                                                    onclick="startDrawPlanRoute($(this))">开始绘制
+                                            </button>
+                                            <button type="button" class="btn btn-default" onclick="savePlanRoute()">保存
+                                            </button>
+                                            <button type="button" class="btn btn-default" onclick="cancelPlanRoute()">
+                                                取消
+                                            </button>
+                                            <!--</div>-->
+                                        </form>
+                                    </div>
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="messages" >
+                                    <div id="div_fenceTable">
+
+                                        <span class=" col-sm-4">
+                                            <button type="button" id="btn_addFence" class="btn btn-primary" style="margin-top:10px;width:100px;" onclick="addFence($(this))">新增</button>
+                                        </span>
+
+                                        <table id="fenceTable" data-search="true"  data-show-columns="true" class="table table-hover">
+                                            <thead>
+                                            <th>序号</th>
+                                            <th>电子围栏名称</th>
+                                            <th>是否启用</th>
+                                            <th>操作</th>
+                                            </thead>
+                                            <tbody id="table_fence"></tbody>
+                                        </table>
+                                    </div>
+                                    <div id="div_addFenceForm" hidden="hidden">
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="fenceInput">电子围栏名称</label>
+                                                <input type="text" class="form-control" id="fenceInput"
+                                                       placeholder="请输入电子围栏名称">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="roadLimitStatus">是否启用</label>
+                                                <select id="fenceStatus" class="form-control">
+                                                    <option value="1" selected="selected">是</option>
+                                                    <option value="0">否</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group" hidden="hidden">
+                                                <label for="fenceGeojson"></label>
+                                                <input type="text" class="form-control" id="fenceGeojson"
+                                                       placeholder="">
+                                                <input type="text" class="form-control" id="fenceHistoryName"
+                                                       placeholder="">
+                                            </div>
+
+                                            <!--<div align="right">-->
+                                            <button type="button" id="btn_startDrawFence" class="btn btn-default"
+                                                    onclick="startDrawFence($(this))">开始绘制
+                                            </button>
+                                            <button type="button" class="btn btn-default" onclick="saveFence()">保存
+                                            </button>
+                                            <button type="button" class="btn btn-default" onclick="cancelFence()">取消
+                                            </button>
+                                            <!--</div>-->
+                                        </form>
+                                    </div>
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+					
+				<!-- /.container-fluid -->
+        <div class="" id="planRouteTreeDiv" hidden="hidden" style="margin: 26px;margin-top: 10px">
+            <div hidden="hidden">
+                <input id="route_id"/>
+            </div>
+            <div>
+                <button class="btn " id="reflashVehicle" onclick="reflashRouteVehicle()">刷新车辆</button>
+                <button class="btn " id="" onclick="routeDone()">完成</button>
+            </div>
+            <ul id="treeDemo" class="ztree"></ul>
+        </div>
+
+        <div id="fenceTreeDiv" hidden="hidden" style="margin: 26px;margin-top: 10px">
+
+            <div class="form-group" hidden="hidden">
+                <label>围栏名称</label>
+                <input id="fence_id">
+            </div>
+            <div class="form-group">
+                <label>告警条件</label>
+                <select class="form-control" id="condition" onchange="changeWarnCondition()">
+                    <option value="在围栏内报警">在围栏内报警</option>
+                    <option value="在围栏外报警">在围栏外报警</option>
+                </select>
+            </div>
+            <div id="fenceTree" class="ztree"></div>
+
+        </div>	
+		</div>
+        <div style="height: 10px;background-color: #0a95a6"></div>
+		<div id="content">
+			<div class="con_right">
+				<div id="map" style="">
+					<div class="dropDown selectLayer">
+						<button class="layui-btn  layui-btn-primary dropDownBtn">图层选择<i class="icon-jt4"></i></button>
+						<ul class="list">
+							<li>
+								<input type="checkbox" name="" value="1" ><span>电子围栏</span>
+							</li>
+							<li>
+								<input type="checkbox" name="" value="2" ><span>其他</span>
+							</li>
+							<li>
+								<input type="checkbox" name="" value="3" ><span>铁路</span>
+							</li>
+							<li>
+								<input type="checkbox" name="" value="4" ><span>货堆</span>
+							</li>
+							<li>
+								<input type="checkbox" name="" value="5" ><span>堆场</span>
+							</li>
+							<li>
+								<input type="checkbox" name="" value="6" checked="true"><span>道路</span>
+							</li>
+						</ul>
+					</div>
+					<div class="dropDown measure">
+						<button class="layui-btn layui-btn-primary dropDownBtn">测量<i class="icon-jt4"></i></button>
+						<ul class="list">
+							<li>
+								<a class="layer-btn ranging" id="line" onClick="toggleControl(this)">测距</a>
+							</li>
+							<li>
+								<a class="layer-btn measurement" id="polygon" onClick="toggleControl(this)">测面</a>
+							</li>
+						</ul>
+						<div id="output"></div>
+					 </div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+    <!-- Bootstrap table -->
+    <link href="./Content/WebStart/Hplus/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet"/>
+    <script src="./Content/bootstrap-table-develop/dist/tableExport.js"></script>
+    <script src="./Content/WebStart/Hplus/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="./Content/WebStart/Hplus/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="./Content/bootstrap-table-develop/dist/extensions/export/bootstrap-table-export.js"></script>
+    <script src="./Content/bootstrap-table-develop/dist/bootstrap-table-fixed-columns.js"></script>
+    <link href="./Content/bootstrap-table-develop/dist/bootstrap-table-fixed-columns.css" rel="stylesheet" />
+
+</body>
+
+</html>
