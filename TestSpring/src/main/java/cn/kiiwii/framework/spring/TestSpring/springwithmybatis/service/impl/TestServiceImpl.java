@@ -21,7 +21,8 @@ public class TestServiceImpl implements ITestService {
 	public boolean transfer(float money, int from, int to) throws Exception {
 		
 		this.testDAO.minusMoney(from, money);
-		//int i = 1/0;
+//		int i = 1/0;
+
 		this.testDAO.addMoney(to, money);
 		return true;
 	}

@@ -20,11 +20,11 @@ public class SpringWithMybatisTest {
 	@Resource(name = "testService")
 	private ITestService testService;
 
-	/*@Test
+	@Test
 	public void test() {
 		boolean b;
 		try {
-			b = testService.transfer(200, 1, 2);
+			b = testService.transfer(10, 1, 2);
 			if(b){
 				System.out.println("转账成功");
 			}else{
@@ -34,24 +34,23 @@ public class SpringWithMybatisTest {
 			e.printStackTrace();
 			System.out.println("转账失败");
 		}
-		
-	}*/
+	}
+
+    @Test
+    public void testInsert() {
+
+        Account account = new Account();
+        account.setMoney(1000);
+        account.setName("xiaozhongzhong");
+        try {
+            testService.insertAccount(account);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 	
-	/*@Test
-	public void testInsert(){
-		
-		Account account = new Account();
-		account.setMoney(1000);
-		account.setName("xiaozhongzhong");
-		try {
-			testService.insertAccount(account);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}*/
-	
-	/*@Test
+	@Test
 	public void testFind(){
 		
 		try {
@@ -61,15 +60,15 @@ public class SpringWithMybatisTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}*/
-	
+	}
+
 	@Test
 	public void testList(){
-		
+
 		try {
 			List<Account> accounts = testService.findAccountsById(3);
 
-			List<Account> account = testService.findAccountsById(3);
+			List<Account> account = testService.findAccountsById(1);
 			System.out.println(accounts);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -77,7 +76,7 @@ public class SpringWithMybatisTest {
 	}
 	@Test
 	public void testFindUser(){
-		
+
 		try {
 			User user = testService.findUserById(1);
 			User user2 = testService.findUserById(1);

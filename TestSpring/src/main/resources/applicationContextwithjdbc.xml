@@ -95,9 +95,9 @@
 	
 	<bean id="dynamicDataSource" class="cn.kiiwii.framework.spring.TestSpring.springwithjdbc.dynamicdatasource.DynamicDataSource">  
         <property name="targetDataSources">  
-            <map key-type="java.lang.String">  
-                <entry value-ref="dataSourceOne" key="dataSourceOne"></entry>  
-                <entry value-ref="dataSourceTwo" key="dataSourceTwo"></entry>  
+            <map key-type="java.lang.String">
+				<entry value-ref="dataSourceOne" key="dataSourceOne"/>
+				<entry value-ref="dataSourceTwo" key="dataSourceTwo"/>
             </map>  
         </property>  
         <property name="defaultTargetDataSource" ref="dataSourceOne">  
@@ -106,7 +106,7 @@
 
 	<!-- 配置Jdbc模板 -->
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-		<property name="dataSource" ref="dynamicDataSource"></property>
+		<property name="dataSource" ref="dynamicDataSource"/>
 	</bean>
 
 
