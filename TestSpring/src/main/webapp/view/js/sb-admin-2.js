@@ -113,7 +113,7 @@ $(function () {
         if(!!harbor_menuList){
             menuList = JSON.parse(harbor_menuList);
             userInfo = JSON.parse(userInfo);
-            $("#welcomeLink").html(" "+userInfo.userName+"，欢迎您")
+            $("#welcomeLink").html(" "+userInfo.username+"，欢迎您")
         }else{
             //如果尚未登录过，则返回登录页面
             window.location.href="login.html"

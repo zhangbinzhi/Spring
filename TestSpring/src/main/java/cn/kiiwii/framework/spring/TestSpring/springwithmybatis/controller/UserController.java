@@ -1,9 +1,15 @@
 package cn.kiiwii.framework.spring.TestSpring.springwithmybatis.controller;
 
+import cn.kiiwii.framework.spring.TestSpring.springwithmybatis.common.JsonObject;
 import cn.kiiwii.framework.spring.TestSpring.springwithmybatis.model.Account;
+import cn.kiiwii.framework.spring.TestSpring.springwithmybatis.model.CommonUser;
+import cn.kiiwii.framework.spring.TestSpring.springwithmybatis.model.LoginUser;
 import cn.kiiwii.framework.spring.TestSpring.springwithmybatis.service.ITestService;
+import cn.kiiwii.framework.spring.TestSpring.springwithmybatis.service.MenuService;
+import cn.kiiwii.framework.spring.TestSpring.springwithmybatis.service.UserService;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,41 +25,28 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController extends BasicController {
     @Autowired
-    private ITestService testService;
+    private UserService userService;
+
+    @Autowired
+    private MenuService menuService;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    String login(@RequestParam("userName") String username) {
-        List<Account> accountList = this.testService.findAccountsById(3);
-        log.info(accountList);
-        HashMap<String,Object> map=new HashMap<String, Object>();
-        LoginUser user = new LoginUser();
-        user.setId(System.currentTimeMillis());
-        user.setName("hello:"+username);
-        map.put("status","success");
-        map.put("user",user);
-        map.put("tst","test");
-        return JSON.toJSONString(map);
-    }
-
-    private class LoginUser {
-        private Long id;
-        private String name;
-
-        public Long getId() {
-            return id;
-        }
-
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
+    Object login(LoginUser user) {
+        List<CommonUser> userList = this.userService.findUserByUsername(user.getUsername());
+        if (userList.size() < 1) {
+            return JsonObject.getFailJson("用户不存在！").toJson();
+        } else {
+            CommonUser dbUser = userList.get(0);
+            dbUser.setLoginPwd(user.getPassword());
+            if (dbUser.checkLoginPwd()) {
+                return JsonObject.getSuccessJson("登录成功")
+                        .put("menuList", menuService.findMenuByUserId(dbUser.getUserId()))
+                        .put("userInfo",JsonObject.getInstance().put("username",dbUser.getUsername()).put("userId",dbUser.getUserId()).toJson())
+                        .toJson();
+            } else {
+                return JsonObject.getFailJson("用户密码错误！").toJson();
+            }
         }
     }
 }
