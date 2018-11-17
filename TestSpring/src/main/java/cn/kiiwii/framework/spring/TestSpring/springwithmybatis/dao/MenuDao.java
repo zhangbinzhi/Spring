@@ -18,4 +18,10 @@ public interface MenuDao {
 
     @Delete("delete from param_menu where parentId = #{parentId}")
     void deleteMenuByParentId(String parentId);
+
+    @Select("SELECT menuId,parentId,menuName,menuLevel,menuType,menuStyle," +
+            "href,icon,sort,isShow,permission,remarks FROM param_menu ORDER BY sort")
+    List<Menu> queryMenu();
+
+
 }

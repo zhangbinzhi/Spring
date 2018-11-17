@@ -10,4 +10,6 @@ public interface MenuService {
     void deleteMenuById(String menuId);
 
     void deleteMenuByParentId(String parentId);
+
+    List<Menu> queryMenu();
 }

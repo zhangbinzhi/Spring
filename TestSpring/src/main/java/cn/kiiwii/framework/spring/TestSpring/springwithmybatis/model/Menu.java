@@ -13,6 +13,16 @@ public class Menu {
     private String remark;
     private String menuStyle;
 
+    public String getMenuType() {
+        return menuType;
+    }
+
+    public void setMenuType(String menuType) {
+        this.menuType = menuType;
+    }
+
+    private String menuType;
+
     public Menu() {
         super();
     }
@@ -31,6 +41,7 @@ public class Menu {
                 ", permission='" + permission + '\'' +
                 ", remark='" + remark + '\'' +
                 ", menuStyle='" + menuStyle + '\'' +
+                ", menuType='" + menuType + '\'' +
                 '}';
     }
 

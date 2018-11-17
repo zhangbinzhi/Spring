@@ -27,4 +27,9 @@ public class MenuServiceImpl implements MenuService {
     public void deleteMenuByParentId(String parentId) {
         this.deleteMenuByParentId(parentId);
     }
+
+    @Override
+    public List<Menu> queryMenu() {
+        return this.menuDao.queryMenu();
+    }
 }
